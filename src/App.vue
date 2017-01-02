@@ -1,28 +1,33 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <hello></hello>
+    <nav-bar></nav-bar>
+    <side-bar></side-bar>
   </div>
 </template>
 
 <script>
-import Hello from './components/Hello'
+import NavBar from './components/common/NavBar'
+import SideBar from './components/common/SideBar'
 
 export default {
   name: 'app',
   components: {
-    Hello
+    NavBar,
+    SideBar
   }
 }
 </script>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: #409fff;
 }
 </style>
