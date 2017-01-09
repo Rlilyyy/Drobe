@@ -41,6 +41,16 @@ module.exports = {
         javascriptEnabled: true,
         acceptSslCerts: true
       }
+    },
+
+    phantomjs: {
+      "desiredCapabilities" : {
+        "browserName" : "phantomjs",
+        "javascriptEnabled" : true,
+        "acceptSslCerts" : true,
+        "phantomjs.binary.path" : "/home/rlilyyy/phantomjs-2.1.1-linux-x86_64/bin/phantomjs",
+        "phantomjs.cli.args" : []
+      }
     }
   }
 }
