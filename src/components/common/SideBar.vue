@@ -1,19 +1,24 @@
 <template>
   <div class="sidebar">
-
+    <avatar></avatar>
   </div>
 </template>
 
 <script>
+  import Avatar from './Avatar'
+
   export default {
-    name: 'SideBar'
+    name: 'SideBar',
+    components: {
+      Avatar
+    }
   }
 </script>
 
 <style scoped>
   .sidebar {
     position: absolute;
-    width: 250px;
+    width: 300px;
     height: 100%;
     top: 0;
     left: 0;
