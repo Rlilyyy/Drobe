@@ -69,7 +69,14 @@ module.exports = {
         loader: 'json'
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.svg$/,
+        loaders: [
+          'svg-sprite-loader',
+          'svgo-loader?useConfig=svgoConfig'
+        ]
+      },
+      {
+        test: /\.(png|jpe?g|gif)(\?.*)?$/,
         loader: 'url',
         query: {
           limit: 10000,
@@ -86,9 +93,26 @@ module.exports = {
       }
     ]
   },
+
   eslint: {
     formatter: require('eslint-friendly-formatter')
   },
+
+  svgoConfig: {
+    plugins: [
+      { removeTitle: true },
+      { convertColors: { shorthex: true } },
+      { convertPathData: true },
+      { cleanupAttrs: true },
+      { removeComments: true },
+      { removeDesc: true },
+      { removeUselessDefs: true },
+      { removeEmptyAttrs: true },
+      { removeHiddenElems: true },
+      { removeEmptyText: true }
+    ]
+  },
+
   vue: {
     loaders: utils.cssLoaders({ sourceMap: useCssSourceMap }),
     postcss: function() {

@@ -17,6 +17,7 @@
     left: 0;
     width: 100%;
     height: 45px;
-    background-color: #3e9dff;
+    background-color: #fff;
+    z-index: 999;
   }
 </style>

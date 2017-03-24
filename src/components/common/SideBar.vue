@@ -1,16 +1,19 @@
 <template>
   <div class="sidebar">
     <avatar></avatar>
+    <el-menu></el-menu>
   </div>
 </template>
 
 <script>
   import Avatar from './Avatar'
+  import ElMenu from './ElMenu'
 
   export default {
     name: 'SideBar',
     components: {
-      Avatar
+      Avatar,
+      ElMenu
     }
   }
 </script>
@@ -22,7 +25,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    padding-top: 45px;
-    background-color: #3e9dff;
+    /*padding-top: 45px;*/
+    box-shadow: 3px 0px 5px rgba(31, 31, 31, .5);
   }
 </style>
