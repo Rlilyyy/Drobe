@@ -20,12 +20,13 @@
 
 <style scoped>
   .sidebar {
-    position: absolute;
+    position: fixed;
     width: 300px;
     height: 100%;
     top: 0;
     left: 0;
     /*padding-top: 45px;*/
     box-shadow: 3px 0px 5px rgba(31, 31, 31, .5);
+    background-color: #fff;
   }
 </style>

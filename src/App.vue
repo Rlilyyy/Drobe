@@ -2,18 +2,21 @@
   <div id="app" class="clearfix">
     <!-- <nav-bar></nav-bar> -->
     <side-bar></side-bar>
+    <home></home>
   </div>
 </template>
 
 <script>
 // import NavBar from 'components/common/NavBar'
 import SideBar from 'components/common/SideBar'
+import Home from 'components/index/Home'
 
 export default {
   name: 'app',
   components: {
     // NavBar,
-    SideBar
+    SideBar,
+    Home
   }
 }
 </script>
@@ -24,7 +27,8 @@ export default {
 }
 
 body {
-  background-color: #fff;
+  margin: 0 !important;
+  padding: 0;
 }
 
 ul, li {
@@ -38,6 +42,7 @@ ul, li {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #409fff;
+  background-color: #dde3ea;
 }
 
 .clearfix {

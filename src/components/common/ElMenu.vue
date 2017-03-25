@@ -93,9 +93,8 @@
     }
 
     .icons {
-      position: absolute;
       width: 100%;
-      bottom: 50px;
+      margin-top: 50px;
 
       svg {
         display: inline-block;
