@@ -2,21 +2,24 @@
   <div id="app" class="clearfix">
     <!-- <nav-bar></nav-bar> -->
     <side-bar></side-bar>
-    <home></home>
+    <!-- <home></home> -->
+    <full-article></full-article>
   </div>
 </template>
 
 <script>
 // import NavBar from 'components/common/NavBar'
 import SideBar from 'components/common/SideBar'
-import Home from 'components/index/Home'
+// import Home from 'components/index/Home'
+import FullArticle from 'components/index/FullArticle'
 
 export default {
   name: 'app',
   components: {
     // NavBar,
     SideBar,
-    Home
+    // Home,
+    FullArticle
   }
 }
 </script>

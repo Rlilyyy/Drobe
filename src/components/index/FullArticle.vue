@@ -4,17 +4,6 @@
       <div class="item">
         <h2 class='title'>文章名称</h2>
         <vue-markdown id="wrapper">{{ content }}</vue-markdown>
-        <a href="#"><div class="shadow">阅读全文……</div></a>
-      </div>
-      <div class="item">
-        <h2 class='title'>文章名称</h2>
-        <vue-markdown id="wrapper">{{ content }}</vue-markdown>
-        <a href="#"><div class="shadow">阅读全文……</div></a>
-      </div>
-      <div class="item">
-        <h2 class='title'>文章名称</h2>
-        <vue-markdown id="wrapper">{{ content }}</vue-markdown>
-        <a href="#"><div class="shadow">阅读全文……</div></a>
       </div>
     </div>
   </div>
@@ -53,11 +42,11 @@ function isArray(array) {
 \`\`\`
       `
     }
-  }
+  },
 
-  // updated () {
-  //   prism.highlightAll()
-  // }
+  updated () {
+    prism.highlightAll()
+  }
 }
 </script>
 
@@ -73,7 +62,6 @@ function isArray(array) {
       height: 100%;
 
       .item {
-        height: 450px;
         margin: 30px 50px;
         border-radius: 20px;
         background-color: #fff;
@@ -81,20 +69,6 @@ function isArray(array) {
         padding: 20px;
         overflow: hidden;
         position: relative;
-
-        .shadow {
-          display: block;
-          position: absolute;
-          width: 100%;
-          height: 130px;
-          text-align: center;
-          line-height: 160px;
-          font-size: 22px;
-          color: rgb(52, 95, 222);
-          bottom: 0;
-          left: 0;
-          background: linear-gradient(to top, rgb(235, 229, 229) 15%, rgba(255, 255, 255, 0));
-        }
 
         .title {
           text-align: center;
