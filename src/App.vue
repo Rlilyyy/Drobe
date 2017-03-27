@@ -3,7 +3,8 @@
     <!-- <nav-bar></nav-bar> -->
     <side-bar></side-bar>
     <!-- <home></home> -->
-    <full-article></full-article>
+    <!-- <full-article></full-article> -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -11,15 +12,15 @@
 // import NavBar from 'components/common/NavBar'
 import SideBar from 'components/common/SideBar'
 // import Home from 'components/index/Home'
-import FullArticle from 'components/index/FullArticle'
+// import FullArticle from 'components/index/FullArticle'
 
 export default {
   name: 'app',
   components: {
     // NavBar,
-    SideBar,
-    // Home,
-    FullArticle
+    SideBar
+    // Home
+    // FullArticle
   }
 }
 </script>
@@ -27,6 +28,10 @@ export default {
 <style>
 * {
   box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
@@ -46,6 +51,7 @@ ul, li {
   text-align: center;
   color: #409fff;
   background-color: #dde3ea;
+  min-height: 100%;
 }
 
 .clearfix {

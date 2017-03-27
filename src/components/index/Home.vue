@@ -1,63 +1,50 @@
 <template>
   <div class="home">
     <div class="main">
-      <div class="item">
-        <h2 class='title'>文章名称</h2>
-        <vue-markdown id="wrapper">{{ content }}</vue-markdown>
-        <a href="#"><div class="shadow">阅读全文……</div></a>
+      <div class="item" v-for="item in items">
+        <h2 class='title'>{{ item.title }}</h2>
+        <div id="wrapper" v-html="marked(item.content)"></div>
+        <router-link :to="{ name: 'FullArticle', params: { id: item._id }}"><div class="shadow">阅读全文……</div></router-link>
       </div>
-      <div class="item">
-        <h2 class='title'>文章名称</h2>
-        <vue-markdown id="wrapper">{{ content }}</vue-markdown>
-        <a href="#"><div class="shadow">阅读全文……</div></a>
-      </div>
-      <div class="item">
-        <h2 class='title'>文章名称</h2>
-        <vue-markdown id="wrapper">{{ content }}</vue-markdown>
-        <a href="#"><div class="shadow">阅读全文……</div></a>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import VueMarkdown from 'vue-markdown'
-import prism from 'prismjs'
-require('../../css/prism.css')
+import axios from 'axios'
+import marked from 'marked'
+import hljs from 'highlight.js'
+require('highlight.js/styles/atom-one-dark.css')
 require('../../css/markdown.css')
-console.log(prism)
+
+marked.setOptions({
+  highlight: function (code, lang, callback) {
+    return hljs.highlightAuto(code).value
+  }
+})
 
 export default {
   name: 'Home',
 
-  components: {
-    VueMarkdown
+  created () {
+    this.getAllArticles()
   },
 
   data () {
     return {
-      content: `> 饿了么二面是在线写代码，有三道题，一道题十分钟内写完提交，在一个网站写，会自动录制代码编写过程
-
-1. 首先写了一个判断数组的函数
-
-\`\`\`javascript
-function isArray(array) {
-  return !!array && Object.prototype.toString.call(array) === "[object Array]";
-}
-\`\`\`
-
-\`\`\`javascript
-function isArray(array) {
-  return !!array && Object.prototype.toString.call(array) === "[object Array]";
-}
-\`\`\`
-      `
+      items: []
     }
-  }
+  },
 
-  // updated () {
-  //   prism.highlightAll()
-  // }
+  methods: {
+    getAllArticles () {
+      axios.get('http://localhost:3000/getArticles').then(response => {
+        response.data.pop()
+        this.items = response.data
+      })
+    },
+
+    marked
+  }
 }
 </script>
 

@@ -2,50 +2,50 @@
   <div class="home">
     <div class="main">
       <div class="item">
-        <h2 class='title'>文章名称</h2>
-        <vue-markdown id="wrapper">{{ content }}</vue-markdown>
+        <h2 class='title'>{{ article.title }}</h2>
+        <div id="wrapper" v-html="article.content"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import VueMarkdown from 'vue-markdown'
-import prism from 'prismjs'
-require('../../css/prism.css')
+import axios from 'axios'
+import marked from 'marked'
+import hljs from 'highlight.js'
+require('highlight.js/styles/atom-one-dark.css')
 require('../../css/markdown.css')
-console.log(prism)
+
+marked.setOptions({
+  highlight: function (code, lang, callback) {
+    return hljs.highlightAuto(code).value
+  }
+})
 
 export default {
   name: 'Home',
 
-  components: {
-    VueMarkdown
+  created () {
+    this.getArticleById()
   },
 
   data () {
     return {
-      content: `> 饿了么二面是在线写代码，有三道题，一道题十分钟内写完提交，在一个网站写，会自动录制代码编写过程
-
-1. 首先写了一个判断数组的函数
-
-\`\`\`javascript
-function isArray(array) {
-  return !!array && Object.prototype.toString.call(array) === "[object Array]";
-}
-\`\`\`
-
-\`\`\`javascript
-function isArray(array) {
-  return !!array && Object.prototype.toString.call(array) === "[object Array]";
-}
-\`\`\`
-      `
+      article: {}
     }
   },
 
-  updated () {
-    prism.highlightAll()
+  methods: {
+    getArticleById () {
+      axios.get('http://localhost:3000/getArticle', {
+        params: {
+          id: this.$route.params.id
+        }
+      }).then(res => {
+        res.data.content = marked(res.data.content)
+        this.article = res.data
+      })
+    }
   }
 }
 </script>

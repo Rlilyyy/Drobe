@@ -318,6 +318,10 @@ body {
         .inverted #wrapper table tbody tr:nth-child(odd) {
           background-color: rgba(255, 255, 255, 0.1); } }
 
-#wrapper pre[class*="language-"] {
+/*#wrapper code[class*="lang-"] {
+}*/
+
+#wrapper pre {
   padding: 15px !important;
+  background-color: #282c34 !important;
 }

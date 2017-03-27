@@ -9,6 +9,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.all('*',function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+
+  if (req.method == 'OPTIONS') {
+    res.send(200);
+  }
+  else {
+    next();
+  }
+});
+
 const mongoose = require('mongoose');
 // 连接mongodb
 mongoose.connect('mongodb://localhost/drobe');
@@ -33,6 +46,16 @@ app.get('/', function (req, res) {
 
 app.get('/saveArticle', function(req, res) {
   res.sendFile(path.resolve('./index.html'));
+});
+
+app.get('/getArticle', function(req, res) {
+  articleModel.findById(req.query.id, function(err, article) {
+    if(err) {
+      res.sendStatus(500);
+    } else {
+      res.send(article);
+    }
+  })
 });
 
 app.get('/getArticles', function(req, res) {
