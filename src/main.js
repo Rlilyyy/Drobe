@@ -5,12 +5,24 @@ import VueRouter from 'vue-router'
 import App from './App'
 import Home from 'components/index/Home'
 import FullArticle from 'components/index/FullArticle'
+import AllArticle from 'components/index/AllArticle'
+import About from 'components/index/About'
+import ChangeArticle from 'components/back/ChangeArticle'
+import CreateArticle from 'components/back/CreateArticle'
+import ViewArticles from 'components/back/ViewArticles'
 
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', component: Home },
-  { path: '/FullArticle/:id', component: FullArticle, name: 'FullArticle' }
+  { path: '/', component: Home, name: 'index' },
+  { path: '/fullArticle/:id', component: FullArticle, name: 'fullArticle' },
+  { path: '/allArticle', component: AllArticle, name: 'allArticle' },
+  { path: '/about', component: About, name: 'about' },
+
+  { path: '/back', component: ViewArticles },
+  { path: '/back/viewArticles', component: ViewArticles, name: 'viewArticles' },
+  { path: '/back/createArticle', component: CreateArticle, name: 'createArticle' },
+  { path: '/back/changeArticle', component: ChangeArticle, name: 'changeArticle' }
 ]
 
 const router = new VueRouter({

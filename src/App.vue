@@ -37,6 +37,7 @@ html, body {
 body {
   margin: 0 !important;
   padding: 0;
+  min-width: 1200px;
 }
 
 ul, li {

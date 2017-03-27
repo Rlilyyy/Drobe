@@ -64,6 +64,16 @@ app.get('/getArticles', function(req, res) {
   });
 });
 
+app.get('/getArticlesTitle', function(req, res) {
+  articleModel.find({}, {title: 1}, function(err, articlesTitle) {
+    if(err) {
+      res.sendStatus(500);
+    } else {
+      res.send(articlesTitle);
+    }
+  });
+});
+
 app.post('/saveArticle', function(req, res) {
   articleModel.create({
     title: req.body.title,

@@ -1,10 +1,10 @@
 <template>
   <div class="home">
     <div class="main">
-      <div class="item" v-for="item in items">
+      <div class="item" v-for="item in items" :key="item._id">
         <h2 class='title'>{{ item.title }}</h2>
         <div id="wrapper" v-html="marked(item.content)"></div>
-        <router-link :to="{ name: 'FullArticle', params: { id: item._id }}"><div class="shadow">阅读全文……</div></router-link>
+        <router-link :to="{ name: 'fullArticle', params: { id: item._id }}"><div class="shadow">阅读全文……</div></router-link>
       </div>
   </div>
 </template>
@@ -38,7 +38,6 @@ export default {
   methods: {
     getAllArticles () {
       axios.get('http://localhost:3000/getArticles').then(response => {
-        response.data.pop()
         this.items = response.data
       })
     },
@@ -77,7 +76,7 @@ export default {
           text-align: center;
           line-height: 160px;
           font-size: 22px;
-          color: rgb(52, 95, 222);
+          color: rgb(0, 171, 255);
           bottom: 0;
           left: 0;
           background: linear-gradient(to top, rgb(235, 229, 229) 15%, rgba(255, 255, 255, 0));
