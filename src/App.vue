@@ -51,7 +51,7 @@ ul, li {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #409fff;
-  background-color: #dde3ea;
+  /*background-color: #dde3ea;*/
   min-height: 100%;
 }
 

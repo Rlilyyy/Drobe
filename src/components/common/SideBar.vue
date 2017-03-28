@@ -26,7 +26,7 @@
     top: 0;
     left: 0;
     /*padding-top: 45px;*/
-    box-shadow: 3px 0px 5px rgba(31, 31, 31, .5);
+    box-shadow: rgba(0, 0, 0, 0.156863) 0px 3px 10px, rgba(0, 0, 0, 0.227451) 0px 3px 10px;
     background-color: #fff;
   }
 </style>

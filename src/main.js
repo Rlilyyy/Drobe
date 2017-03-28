@@ -7,6 +7,7 @@ import Home from 'components/index/Home'
 import FullArticle from 'components/index/FullArticle'
 import AllArticle from 'components/index/AllArticle'
 import About from 'components/index/About'
+import TagView from 'components/index/TagView'
 import ChangeArticle from 'components/back/ChangeArticle'
 import CreateArticle from 'components/back/CreateArticle'
 import ViewArticles from 'components/back/ViewArticles'
@@ -18,6 +19,7 @@ const routes = [
   { path: '/fullArticle/:id', component: FullArticle, name: 'fullArticle' },
   { path: '/allArticle', component: AllArticle, name: 'allArticle' },
   { path: '/about', component: About, name: 'about' },
+  { path: '/tagView', component: TagView, name: 'tagView' },
 
   { path: '/back', component: ViewArticles },
   { path: '/back/viewArticles', component: ViewArticles, name: 'viewArticles' },
@@ -29,14 +31,10 @@ const router = new VueRouter({
   routes // （缩写）相当于 routes: routes
 })
 
-// const app = new Vue({
-//   router
-// }).$mount('#app')
-
 /* eslint-disable no-new */
 new Vue({
   router,
   el: '#app',
   template: '<App/>',
   components: { App }
-}).$mount('#app')
+})

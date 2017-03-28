@@ -3,24 +3,29 @@
     <ul class="menu-ul" v-if="$route.path.indexOf('/back') === -1">
       <router-link :to="{ name: 'index'}">
         <li :class="{ cur: $route.name === 'index' }">
-          <div>主页 | PAGE</div>
+          <div>主页 | HOME</div>
         </li>
       </router-link>
-      <a href="https://ameizi.libinhong.com" target="_blank">
+      <router-link :to="{ name: 'allArticle'}">
+        <li :class="{ cur: $route.name === 'allArticle' }">
+          <div>所有文章 | ARTICLES</div>
+        </li>
+      </router-link>
+      <router-link :to="{ name: 'tagView'}">
+        <li :class="{ cur: $route.name === 'tagView' }">
+          <div>所有标签 | TAGS</div>
+        </li>
+      </router-link>
+      <!-- <a href="https://ameizi.libinhong.com" target="_blank">
         <li>
           <div>福利 | FULI</div>
         </li>
-      </a>
-      <a href="https://ameizi.libinhong.com" target="_blank">
+      </a> -->
+      <a href="https://oxygen.libinhong.com" target="_blank">
         <li>
           <div>听听音乐 | MUSIC</div>
         </li>
       </a>
-      <router-link :to="{ name: 'allArticle'}">
-        <li :class="{ cur: $route.name === 'allArticle' }">
-          <div>所有文章 | ALL</div>
-        </li>
-      </router-link>
       <router-link :to="{ name: 'about'}">
         <li :class="{ cur: $route.name === 'about' }">
           <div>关于我 | ABOUT</div>

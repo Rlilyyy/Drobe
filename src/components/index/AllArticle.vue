@@ -2,8 +2,20 @@
   <div class="all-article">
     <div class="wrapper">
       <div class="main">
-        <div class="title-item" v-for="titleItem in titleList" :key="titleItem._id">
-          <router-link :to="{ name: 'fullArticle', params: { id: titleItem._id }}"><div class="shadow">《{{ titleItem.title }}》</div></router-link>
+        <div class="page-title">
+          所有文章
+        </div>
+        <div class="title-main">
+          <div class="title-item" v-for="titleItem in titleList" :key="titleItem._id">
+            <div class="title">
+              <router-link :to="{ name: 'fullArticle', params: { id: titleItem._id }}">
+                《{{ titleItem.title }}》
+              </router-link>
+              <span class="tag">JavaScript</span>
+              <span class="tag">CSS</span>
+              <span class="create-time">创建于 2016年12月3日</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -50,10 +62,18 @@ export default {
       .main {
         margin: 30px 50px;
         background-color: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, .1);
-        padding: 20px 30px 40px 30px;
+        border-radius: 2px;
+        box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
         text-align: left;
+
+        .page-title {
+          width: 100%;
+          background-color: rgb(232, 232, 232);
+          line-height: 56px;
+          color: rgba(0, 0, 0, 0.4);
+          font-size: 20px;
+          padding-left: 24px;
+        }
 
         .title-item:last-child {
           &:after {
@@ -66,6 +86,10 @@ export default {
           color: inherit;
         }
 
+        .title-main {
+          padding: 20px 30px 40px 30px;
+        }
+
         .title-item {
           position: relative;
           height: 26px;
@@ -73,6 +97,43 @@ export default {
           padding-left: 38px;
           font-size: 18px;
           margin-top: 25px;
+
+          .title {
+            position: relative;
+            padding-right: 185px;
+            width: 100%;
+            overflow: hidden;
+
+            .tag {
+              font-size: 14px;
+              display: inline-block;
+              height: 26px;
+              line-height: 26px;
+              padding: 0 15px;
+              background-color: rgb(0, 171, 255);
+              color: white;
+              border-radius: 2px;
+              box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+              cursor: pointer;
+              transition: background-color .3s ease;
+
+              &:hover {
+                background-color: rgb(0, 151, 255);
+              }
+
+              &:active {
+                background-color: rgb(0, 131, 255);
+              }
+            }
+
+            .create-time {
+              position: absolute;
+              right: 0;
+              padding-right: 24px;
+              font-size: 14px;
+              color: rgba(0, 0, 0, 0.4);
+            }
+          }
 
           &:before {
             display: inline-block;
