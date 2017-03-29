@@ -34,7 +34,9 @@ db.once('open', (callback) => {
 // 创建schema
 const articleSchema = new mongoose.Schema({
     title: String,
-    content: String
+    content: String,
+    createTime: Number,
+    tags: Array
 });
 
 // 创建model
@@ -65,7 +67,7 @@ app.get('/getArticles', function(req, res) {
 });
 
 app.get('/getArticlesTitle', function(req, res) {
-  articleModel.find({}, {title: 1}, function(err, articlesTitle) {
+  articleModel.find({}, {title: 1, tags: 1, createTime: 1}, function(err, articlesTitle) {
     if(err) {
       res.sendStatus(500);
     } else {
@@ -75,9 +77,13 @@ app.get('/getArticlesTitle', function(req, res) {
 });
 
 app.post('/saveArticle', function(req, res) {
+  let { title, content, createTime, tags } = req.body;
+
   articleModel.create({
-    title: req.body.title,
-    content: req.body.content
+    title,
+    content,
+    createTime,
+    tags
   }, function(err, article) {
     if(err) {
       res.sendStatus(500);
@@ -87,6 +93,41 @@ app.post('/saveArticle', function(req, res) {
   })
 });
 
+app.get('deleteArticle', function(req, res) {
+  articleModel.findByIdAndRemove(req.query.id, function(err) {
+    if(err) {
+      res.sendStatus(500);
+    } else {
+      res.sendStatus(200);
+    }
+  });
+});
+
+app.post('changeArticle', function(req, res) {
+  let { title, content, createTime, tags } = req.body;
+
+  articleModel.findByIdAndUpdate(req.body._id, {
+    title,
+    content,
+    createTime,
+    tags
+  }, function(err, newArticle) {
+    if(err) {
+      res.sendStatus(500);
+    } else {
+      res.send(newArticle);
+    }
+  });
+});
+app.get('/test1', function(req, res) {
+  articleModel.find({title: {$in: 'ES6'}}, function(err, result) {
+    if(err) {
+      res.sendStatus(500);
+    } else {
+      res.send(result);
+    }
+  });
+});
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');

@@ -21,7 +21,7 @@ const routes = [
   { path: '/about', component: About, name: 'about' },
   { path: '/tagView', component: TagView, name: 'tagView' },
 
-  { path: '/back', component: ViewArticles },
+  { path: '/back', redirect: '/back/viewArticles' },
   { path: '/back/viewArticles', component: ViewArticles, name: 'viewArticles' },
   { path: '/back/createArticle', component: CreateArticle, name: 'createArticle' },
   { path: '/back/changeArticle', component: ChangeArticle, name: 'changeArticle' }
