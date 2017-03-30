@@ -8,22 +8,22 @@
         <div class="create-main clearfix">
           <div class="field-item">
             <p>文章标题</p>
-            <input type="text" class="title" name="title" placeholder="请输入文章标题" autocomplete="off">
+            <input type="text" class="title" name="title" placeholder="请输入文章标题" autocomplete="off" v-model="title">
           </div>
           <div class="field-item">
             <p>创建时间</p>
-            <input type="text" class="create-time" name="createTime" placeholder="请输入创建时间" autocomplete="off">
+            <input type="date" class="create-time" name="createTime" placeholder="请输入创建时间" autocomplete="off" v-model="createTime">
           </div>
           <div class="field-item">
             <p>文章标签</p>
-            <input type="text" class="create-time" name="tags" placeholder="请输入文章标签" autocomplete="off">
+            <input type="text" name="tags" placeholder="请输入文章标签" autocomplete="off" v-model="tags">
           </div>
           <div class="field-item">
             <p>文章内容</p>
-            <textarea name="content" class="content"></textarea>
+            <textarea name="content" class="content" v-model="content"></textarea>
           </div>
           <div class="btn-item">
-            <button type="button" name="submit">提交修改</button>
+            <button type="button" name="submit" @click="saveArticleChange">提交修改</button>
           </div>
         </div>
       </div>
@@ -32,8 +32,63 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  name: 'ChangeArticle'
+  name: 'ChangeArticle',
+
+  created () {
+    this.getArticleById()
+  },
+
+  data () {
+    return {
+      id: '',
+      title: '',
+      createTime: '',
+      tags: '',
+      content: ''
+    }
+  },
+
+  methods: {
+    getArticleById () {
+      axios.get('http://localhost:3000/getArticle', {
+        params: {
+          id: this.$route.params.id
+        }
+      }).then(res => {
+        this.id = res.data._id
+        this.title = res.data.title
+        this.createTime = this.frontFormatDate(res.data.createTime || new Date().getTime())
+        this.tags = res.data.tags.join('|')
+        this.content = res.data.content
+      })
+    },
+
+    saveArticleChange () {
+      axios.post('http://localhost:3000/changeArticle', {
+        id: this.id,
+        title: this.title,
+        createTime: this.backFormatDate(this.createTime),
+        tags: this.tags.split('|'),
+        content: this.content
+      }).then(res => {
+        console.log(res.data)
+      })
+    },
+
+    frontFormatDate (t) {
+      let date = new Date(t)
+      let year = date.getFullYear()
+      let month = date.getMonth() + 1
+      let day = date.getDate()
+      return `${year}-${month < 9 ? 0 : ''}${month}-${day < 9 ? 0 : ''}${day}`
+    },
+
+    backFormatDate (t) {
+      return new Date(t).getTime()
+    }
+  }
 }
 </script>
 

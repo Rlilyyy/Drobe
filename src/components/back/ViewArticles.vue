@@ -12,13 +12,17 @@
               <th>创建时间</th>
               <th>操作</th>
             </tr>
-            <tr>
-              <td>ES6学习笔记</td>
-              <td>2016年12月15日</td>
+            <tr v-for="(article, index) in articles" :key="article._id">
+              <td>{{ article.title }}</td>
+              <td>{{ frontFormatDate(article.createTime) }}</td>
               <td>
-                <button type="button" name="button" class="btn view-btn">查看</button>
-                <button type="button" name="button" class="btn change-btn">修改</button>
-                <button type="button" name="button" class="btn del-btn">删除</button>
+                <router-link :to="{ name: 'fullArticle', params: { id: article._id }}">
+                  <button type="button" name="button" class="btn view-btn">查看</button>
+                </router-link>
+                <router-link :to="{ name: 'changeArticle', params: { id: article._id }}">
+                  <button type="button" name="button" class="btn change-btn">修改</button>
+                </router-link>
+                <button type="button" name="button" class="btn del-btn" @click="deleteArticle(article._id, index)">删除</button>
               </td>
             </tr>
           </table>
@@ -29,8 +33,47 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  name: 'ViewArticles'
+  name: 'ViewArticles',
+
+  created () {
+    this.getArticlesInfo()
+  },
+
+  data () {
+    return {
+      articles: []
+    }
+  },
+
+  methods: {
+    getArticlesInfo () {
+      axios.get('http://localhost:3000/getArticlesInfo').then(response => {
+        this.articles = response.data
+      })
+    },
+
+    deleteArticle (id, index) {
+      axios.get('http://localhost:3000/deleteArticle', {
+        params: {
+          id
+        }
+      }).then(() => {
+        this.articles.splice(index, 1)
+      })
+    },
+
+    frontFormatDate (t) {
+      if (!t) return
+      let date = new Date(t)
+      let year = date.getFullYear()
+      let month = date.getMonth() + 1
+      let day = date.getDate()
+      return `${year}-${month < 9 ? 0 : ''}${month}-${day < 9 ? 0 : ''}${day}`
+    }
+  }
 }
 </script>
 

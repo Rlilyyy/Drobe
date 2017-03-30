@@ -3,9 +3,8 @@
     <div class="wrapper">
       <div class="main">
         <div class="page-title">
-          <span class="tag">JavaScript</span>
-          <span class="tag">CSS</span>
-          <span class="time">创建于 2016年3月16日</span>
+          <span class="tag" v-for="tag in article.tags">{{ tag }}</span>
+          <span class="time">创建于 {{ frontFormatDate(article.createTime) }}</span>
         </div>
         <h1 class='title'>{{ article.title }}</h1>
         <div id="wrapper" v-html="article.content"></div>
@@ -50,6 +49,14 @@ export default {
         res.data.content = marked(res.data.content)
         this.article = res.data
       })
+    },
+
+    frontFormatDate (t) {
+      let date = new Date(t)
+      let year = date.getFullYear()
+      let month = date.getMonth() + 1
+      let day = date.getDate()
+      return `${year}-${month < 9 ? 0 : ''}${month}-${day < 9 ? 0 : ''}${day}`
     }
   }
 }
@@ -94,6 +101,7 @@ export default {
             box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
             cursor: pointer;
             transition: background-color .3s ease;
+            margin-right: 5px;
 
             &:hover {
               background-color: rgb(0, 151, 255);

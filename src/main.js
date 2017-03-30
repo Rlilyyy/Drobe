@@ -24,7 +24,7 @@ const routes = [
   { path: '/back', redirect: '/back/viewArticles' },
   { path: '/back/viewArticles', component: ViewArticles, name: 'viewArticles' },
   { path: '/back/createArticle', component: CreateArticle, name: 'createArticle' },
-  { path: '/back/changeArticle', component: ChangeArticle, name: 'changeArticle' }
+  { path: '/back/changeArticle/:id', component: ChangeArticle, name: 'changeArticle' }
 ]
 
 const router = new VueRouter({

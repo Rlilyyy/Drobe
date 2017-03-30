@@ -11,11 +11,11 @@ app.use(cookieParser());
 
 app.all('*',function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With');
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
 
   if (req.method == 'OPTIONS') {
-    res.send(200);
+    res.sendStatus(200);
   }
   else {
     next();
@@ -23,6 +23,7 @@ app.all('*',function (req, res, next) {
 });
 
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 // 连接mongodb
 mongoose.connect('mongodb://localhost/drobe');
 // 实例化连接对象
@@ -36,11 +37,16 @@ const articleSchema = new mongoose.Schema({
     title: String,
     content: String,
     createTime: Number,
-    tags: Array
+    tags: [String]
+});
+
+const tagSchema = new mongoose.Schema({
+    name: String
 });
 
 // 创建model
 const articleModel = db.model('article', articleSchema) // newClass为创建或选中的集合
+const tagModel = db.model('tag', tagSchema) // newClass为创建或选中的集合
 
 app.get('/', function (req, res) {
   res.sendFile(path.resolve('../dist/index.html'));
@@ -66,6 +72,16 @@ app.get('/getArticles', function(req, res) {
   });
 });
 
+app.get('/getArticlesInfo', function(req, res) {
+  articleModel.find({}, {title: 1, createTime: 1 }, function(err, articlesTitle) {
+    if(err) {
+      res.sendStatus(500);
+    } else {
+      res.send(articlesTitle);
+    }
+  });
+});
+
 app.get('/getArticlesTitle', function(req, res) {
   articleModel.find({}, {title: 1, tags: 1, createTime: 1}, function(err, articlesTitle) {
     if(err) {
@@ -88,12 +104,23 @@ app.post('/saveArticle', function(req, res) {
     if(err) {
       res.sendStatus(500);
     } else {
-      res.sendStatus(200);
+      // res.sendStatus(200);
+      let tagArr = [];
+      tags.forEach(tag => {
+        tagArr.push({name: tag});
+      });
+      tagModel.create(tagArr, function(err) {
+        if(err) {
+          res.sendStatus(500);
+        } else {
+          res.sendStatus(200);
+        }
+      })
     };
   })
 });
 
-app.get('deleteArticle', function(req, res) {
+app.get('/deleteArticle', function(req, res) {
   articleModel.findByIdAndRemove(req.query.id, function(err) {
     if(err) {
       res.sendStatus(500);
@@ -103,29 +130,37 @@ app.get('deleteArticle', function(req, res) {
   });
 });
 
-app.post('changeArticle', function(req, res) {
-  let { title, content, createTime, tags } = req.body;
+app.post('/changeArticle', function(req, res) {
+  let { id, title, content, createTime, tags } = req.body;
 
-  articleModel.findByIdAndUpdate(req.body._id, {
+  articleModel.findByIdAndUpdate(id, {
     title,
     content,
     createTime,
     tags
+  }, {
+    'new': true
   }, function(err, newArticle) {
     if(err) {
       res.sendStatus(500);
     } else {
-      res.send(newArticle);
+      let tagArr = [];
+      tags.forEach(tag => {
+        tagArr.push({name: tag});
+      });
+      tagModel.create(tagArr, function(err) {
+        if(err) {
+          res.sendStatus(500);
+        } else {
+          res.send(newArticle);
+        }
+      })
     }
   });
 });
 app.get('/test1', function(req, res) {
-  articleModel.find({title: {$in: 'ES6'}}, function(err, result) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      res.send(result);
-    }
+  tagModel.find().distinct('name').exec(function(err, result) {
+    res.send(result);
   });
 });
 

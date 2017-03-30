@@ -8,23 +8,23 @@
         <div class="create-main clearfix">
           <div class="field-item">
             <p>文章标题</p>
-            <input type="text" class="title" name="title" placeholder="请输入文章标题" autocomplete="off">
+            <input type="text" class="title" name="title" placeholder="请输入文章标题" autocomplete="off" v-model="title">
           </div>
           <div class="field-item">
             <p>创建时间</p>
-            <input type="text" class="create-time" name="createTime" placeholder="请输入创建时间" autocomplete="off">
+            <input type="date" class="create-time" name="createTime" placeholder="请输入创建时间" autocomplete="off" v-model="createTime">
           </div>
           <div class="field-item">
             <p>文章标签</p>
-            <input type="text" class="create-time" name="tags" placeholder="请输入文章标签" autocomplete="off">
+            <input type="text" name="tags" placeholder="请输入文章标签" autocomplete="off" v-model="tags">
           </div>
           <div class="field-item">
             <p>文章内容</p>
-            <textarea name="content" class="content"></textarea>
+            <textarea name="content" class="content" v-model="content"></textarea>
           </div>
           <div class="btn-item">
-            <button type="button" name="submit" class="init">初始化</button>
-            <button type="button" name="submit">创建文章</button>
+            <button type="button" name="submit" class="init" @click="init">初始化</button>
+            <button type="button" name="submit" @click="createArticle">创建文章</button>
           </div>
         </div>
       </div>
@@ -33,8 +33,38 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  name: 'CreateArticle'
+  name: 'CreateArticle',
+
+  data () {
+    return {
+      title: '',
+      createTime: '',
+      tags: '',
+      content: ''
+    }
+  },
+
+  methods: {
+    createArticle () {
+      axios.post('http://localhost:3000/saveArticle', {
+        title: this.title,
+        createTime: new Date(this.createTime).getTime(),
+        tags: this.tags.split('|'),
+        content: this.content
+      }).then(response => {
+        console.log('ok')
+      })
+    },
+
+    init () {
+      this.title = ''
+      this.createTime = ''
+      this.tags = ''
+      this.content = ''
+    }
+  }
 }
 </script>
 
