@@ -76,7 +76,11 @@ app.use('/back', function(req, res, next) {
   }
 });
 
-app.get('/', function (req, res) {
+app.get('/favicon.ico', function(req, res) {
+  res.sendFile(path.resolve('./favicon.jpg'));
+});
+
+app.get('/', function(req, res) {
   res.sendFile(path.resolve('../dist/index.html'));
 });
 

@@ -44,7 +44,7 @@
           border: 5px solid rgb(217, 217, 217);
           border-radius: 50%;
           background-color: rgb(214, 214, 214);
-          background-image: url('../../assets/avatar.jpg');
+          background-image: url('../../assets/avatar2.jpg');
           background-size: 100% 100%;
           background-position: center;
           background-repeat: no-repeat;
