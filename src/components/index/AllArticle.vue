@@ -11,8 +11,8 @@
               <router-link :to="{ name: 'fullArticle', params: { id: titleItem._id }}">
                 《{{ titleItem.title }}》
               </router-link>
-              <router-link :to="{ name: 'articlesWithTag', params: { tag: tag }}" v-for="tag in titleItem.tags.splice(0, 2)">
-                <span class="tag">{{ tag }}</span>
+              <router-link :to="{ name: 'articlesWithTag', params: { tag: tag }}" v-for="(tag, index) in titleItem.tags">
+                <span class="tag" v-if="index < 3">{{ tag }}</span>
               </router-link>
               <span class="create-time">创建于 {{ frontFormatDate(titleItem.createTime) }}</span>
             </div>
