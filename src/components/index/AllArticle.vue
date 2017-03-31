@@ -11,7 +11,7 @@
               <router-link :to="{ name: 'fullArticle', params: { id: titleItem._id }}">
                 《{{ titleItem.title }}》
               </router-link>
-              <router-link :to="{ name: 'articlesWithTag', params: { tag: tag }}" v-for="tag in titleItem.tags">
+              <router-link :to="{ name: 'articlesWithTag', params: { tag: tag }}" v-for="tag in titleItem.tags.splice(0, 2)">
                 <span class="tag">{{ tag }}</span>
               </router-link>
               <span class="create-time">创建于 {{ frontFormatDate(titleItem.createTime) }}</span>
@@ -43,9 +43,9 @@ export default {
   methods: {
     getAllTitle () {
       axios.get(`${Store.BASE_URL}/getArticlesTitle`).then(response => {
-        if (response.data.length > 3) {
-          response.data.splice(0, response.data.length - 3)
-        }
+        // if (response.data.length > 3) {
+        //   response.data.splice(0, response.data.length - 3)
+        // }
         this.titleList = response.data
       })
     },
