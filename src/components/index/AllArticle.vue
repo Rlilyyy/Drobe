@@ -11,7 +11,9 @@
               <router-link :to="{ name: 'fullArticle', params: { id: titleItem._id }}">
                 《{{ titleItem.title }}》
               </router-link>
-              <span class="tag" v-for="tag in titleItem.tags">{{ tag }}</span>
+              <router-link :to="{ name: 'articlesWithTag', params: { tag: tag }}" v-for="tag in titleItem.tags">
+                <span class="tag">{{ tag }}</span>
+              </router-link>
               <span class="create-time">创建于 {{ frontFormatDate(titleItem.createTime) }}</span>
             </div>
           </div>
@@ -23,6 +25,8 @@
 
 <script>
 import axios from 'axios'
+import Store from '../../store.js'
+
 export default {
   name: 'AllArticle',
 
@@ -38,7 +42,7 @@ export default {
 
   methods: {
     getAllTitle () {
-      axios.get('http://localhost:3000/getArticlesTitle').then(response => {
+      axios.get(`${Store.BASE_URL}/getArticlesTitle`).then(response => {
         if (response.data.length > 3) {
           response.data.splice(0, response.data.length - 3)
         }
@@ -51,7 +55,7 @@ export default {
       let year = date.getFullYear()
       let month = date.getMonth() + 1
       let day = date.getDate()
-      return `${year}-${month < 9 ? 0 : ''}${month}-${day < 9 ? 0 : ''}${day}`
+      return `${year}-${month < 10 ? 0 : ''}${month}-${day < 10 ? 0 : ''}${day}`
     }
   }
 }

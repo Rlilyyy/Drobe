@@ -34,8 +34,13 @@
 
 <script>
 import axios from 'axios'
+import Store from '../../store.js'
 export default {
   name: 'CreateArticle',
+
+  created () {
+    this.verifyLogin()
+  },
 
   data () {
     return {
@@ -48,13 +53,25 @@ export default {
 
   methods: {
     createArticle () {
-      axios.post('http://localhost:3000/saveArticle', {
+      if (this.title === '' || this.createTime === '' || this.tags === '' || this.content === '') return
+
+      axios.post(`${Store.BASE_URL}/back/saveArticle`, {
         title: this.title,
         createTime: new Date(this.createTime).getTime(),
         tags: this.tags.split('|'),
         content: this.content
       }).then(response => {
-        console.log('ok')
+        this.$router.push({name: 'viewArticles'})
+      })
+    },
+
+    verifyLogin () {
+      axios.get(`${Store.BASE_URL}/verify`).then(response => {
+        if (response.data === 'no login') {
+          this.$router.push({name: 'login'})
+        } else {
+          return
+        }
       })
     },
 

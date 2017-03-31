@@ -52,7 +52,7 @@ ul, li {
   text-align: center;
   color: #409fff;
   /*background-color: #dde3ea;*/
-  min-height: 100%;
+  height: 100%;
 }
 
 .clearfix {

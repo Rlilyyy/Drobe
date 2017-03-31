@@ -3,7 +3,10 @@
     <div class="wrapper">
       <div class="main" v-for="item in items" :key="item._id">
         <div class="page-title">
-          <span class="tag" v-for="tag in item.tags">{{ tag }}</span>
+          <router-link :to="{ name: 'articlesWithTag', params: { tag: tag }}" v-for="tag in item.tags">
+            <span class="tag">{{ tag }}</span>
+          </router-link>
+          <!-- <span class="tag" v-for="tag in item.tags">{{ tag }}</span> -->
           <span class="time">创建于 {{ frontFormatDate(item.createTime) }}</span>
         </div>
         <h1 class='title'>{{ item.title }}</h1>
@@ -23,6 +26,7 @@
 import axios from 'axios'
 import marked from 'marked'
 import hljs from 'highlight.js'
+import Store from '../../store.js'
 require('highlight.js/styles/atom-one-dark.css')
 require('../../css/markdown.css')
 
@@ -36,7 +40,11 @@ export default {
   name: 'Home',
 
   created () {
-    this.getAllArticles()
+    if (this.$route.name === 'index') {
+      this.getAllArticles()
+    } else {
+      this.getArticlesByTag()
+    }
   },
 
   data () {
@@ -47,7 +55,17 @@ export default {
 
   methods: {
     getAllArticles () {
-      axios.get('http://localhost:3000/getArticles').then(response => {
+      axios.get(`${Store.BASE_URL}/getArticles`).then(response => {
+        this.items = response.data
+      })
+    },
+
+    getArticlesByTag () {
+      axios.get(`${Store.BASE_URL}/getArticlesByTag`, {
+        params: {
+          tag: this.$route.params.tag
+        }
+      }).then(response => {
         this.items = response.data
       })
     },
@@ -59,7 +77,18 @@ export default {
       let year = date.getFullYear()
       let month = date.getMonth() + 1
       let day = date.getDate()
-      return `${year}-${month < 9 ? 0 : ''}${month}-${day < 9 ? 0 : ''}${day}`
+      return `${year}-${month < 10 ? 0 : ''}${month}-${day < 10 ? 0 : ''}${day}`
+    }
+  },
+
+  watch: {
+    '$route' () {
+      this.items = []
+      if (this.$route.name === 'index') {
+        this.getAllArticles()
+      } else {
+        this.getArticlesByTag()
+      }
     }
   }
 }

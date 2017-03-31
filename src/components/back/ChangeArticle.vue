@@ -33,6 +33,7 @@
 
 <script>
 import axios from 'axios'
+import Store from '../../store.js'
 export default {
   name: 'ChangeArticle',
 
@@ -52,7 +53,7 @@ export default {
 
   methods: {
     getArticleById () {
-      axios.get('http://localhost:3000/getArticle', {
+      axios.get(`${Store.BASE_URL}/back/getArticle`, {
         params: {
           id: this.$route.params.id
         }
@@ -66,14 +67,15 @@ export default {
     },
 
     saveArticleChange () {
-      axios.post('http://localhost:3000/changeArticle', {
+      if (this.title === '' || this.createTime === '' || this.tags === '' || this.content === '') return
+      axios.post(`${Store.BASE_URL}/back/changeArticle`, {
         id: this.id,
         title: this.title,
         createTime: this.backFormatDate(this.createTime),
         tags: this.tags.split('|'),
         content: this.content
       }).then(res => {
-        console.log(res.data)
+        this.$router.push({name: 'viewArticles'})
       })
     },
 
@@ -82,7 +84,7 @@ export default {
       let year = date.getFullYear()
       let month = date.getMonth() + 1
       let day = date.getDate()
-      return `${year}-${month < 9 ? 0 : ''}${month}-${day < 9 ? 0 : ''}${day}`
+      return `${year}-${month < 10 ? 0 : ''}${month}-${day < 10 ? 0 : ''}${day}`
     },
 
     backFormatDate (t) {

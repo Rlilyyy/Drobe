@@ -3,7 +3,9 @@
     <div class="wrapper">
       <div class="main">
         <div class="page-title">
-          <span class="tag" v-for="tag in article.tags">{{ tag }}</span>
+          <router-link :to="{ name: 'articlesWithTag', params: { tag: tag }}" v-for="tag in article.tags">
+            <span class="tag">{{ tag }}</span>
+          </router-link>
           <span class="time">创建于 {{ frontFormatDate(article.createTime) }}</span>
         </div>
         <h1 class='title'>{{ article.title }}</h1>
@@ -17,6 +19,7 @@
 import axios from 'axios'
 import marked from 'marked'
 import hljs from 'highlight.js'
+import Store from '../../store.js'
 require('highlight.js/styles/atom-one-dark.css')
 require('../../css/markdown.css')
 
@@ -41,7 +44,7 @@ export default {
 
   methods: {
     getArticleById () {
-      axios.get('http://localhost:3000/getArticle', {
+      axios.get(`${Store.BASE_URL}/getArticle`, {
         params: {
           id: this.$route.params.id
         }
@@ -56,7 +59,7 @@ export default {
       let year = date.getFullYear()
       let month = date.getMonth() + 1
       let day = date.getDate()
-      return `${year}-${month < 9 ? 0 : ''}${month}-${day < 9 ? 0 : ''}${day}`
+      return `${year}-${month < 10 ? 0 : ''}${month}-${day < 10 ? 0 : ''}${day}`
     }
   }
 }

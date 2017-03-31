@@ -34,6 +34,7 @@
 
 <script>
 import axios from 'axios'
+import Store from '../../store.js'
 
 export default {
   name: 'ViewArticles',
@@ -50,13 +51,16 @@ export default {
 
   methods: {
     getArticlesInfo () {
-      axios.get('http://localhost:3000/getArticlesInfo').then(response => {
+      axios.get(`${Store.BASE_URL}/back/getArticlesInfo`).then(response => {
+        if (response.data === 'no login') {
+          this.$router.push({name: 'login'})
+        }
         this.articles = response.data
       })
     },
 
     deleteArticle (id, index) {
-      axios.get('http://localhost:3000/deleteArticle', {
+      axios.get(`${Store.BASE_URL}/back/deleteArticle`, {
         params: {
           id
         }
@@ -71,7 +75,7 @@ export default {
       let year = date.getFullYear()
       let month = date.getMonth() + 1
       let day = date.getDate()
-      return `${year}-${month < 9 ? 0 : ''}${month}-${day < 9 ? 0 : ''}${day}`
+      return `${year}-${month < 10 ? 0 : ''}${month}-${day < 10 ? 0 : ''}${day}`
     }
   }
 }

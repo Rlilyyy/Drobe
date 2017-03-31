@@ -3,21 +3,33 @@ let app = express();
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
+let session = require('express-session')
+let bcrypt = require('bcrypt');
+let jwt = require('jsonwebtoken');
+
+const cert = 'something here';
 
 app.use('/static', express.static('../dist/static'));
+// app.set('trust proxy', 1); // trust first proxy
+app.use(session({
+  secret: 'awesome',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.all('*',function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With');
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
 
-  if (req.method == 'OPTIONS') {
+  if(req.method == 'OPTIONS') {
     res.sendStatus(200);
-  }
-  else {
+  } else {
     next();
   }
 });
@@ -40,59 +52,75 @@ const articleSchema = new mongoose.Schema({
     tags: [String]
 });
 
-const tagSchema = new mongoose.Schema({
-    name: String
+const userSchema = new mongoose.Schema({
+    username: String,
+    passwordHash: String
 });
 
 // 创建model
-const articleModel = db.model('article', articleSchema) // newClass为创建或选中的集合
-const tagModel = db.model('tag', tagSchema) // newClass为创建或选中的集合
+const articleModel = db.model('article', articleSchema); // newClass为创建或选中的集合
+const userModel = db.model('user', userSchema);
+
+app.use('/back', function(req, res, next) {
+  let token = req.cookies.token;
+
+  if(token) {
+    let decodedToken = jwt.verify(token, cert);
+    userModel.findById(decodedToken.id).then(_ => {
+      next();
+    }).catch(_ => {
+      res.send('no login');
+    });
+  } else {
+    res.send('no login');
+  }
+});
 
 app.get('/', function (req, res) {
   res.sendFile(path.resolve('../dist/index.html'));
 });
 
-app.get('/saveArticle', function(req, res) {
-  res.sendFile(path.resolve('./index.html'));
+app.get('/getArticle', function(req, res) {
+  articleModel.findById(req.query.id).then(article => {
+    res.send(article);
+  }).catch(_ => {
+    res.sendStatus(500);
+  })
 });
 
-app.get('/getArticle', function(req, res) {
-  articleModel.findById(req.query.id, function(err, article) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      res.send(article);
-    }
+app.get('/back/getArticle', function(req, res) {
+  articleModel.findById(req.query.id).then(article => {
+    res.send(article);
+  }).catch(_ => {
+    res.sendStatus(500);
   })
 });
 
 app.get('/getArticles', function(req, res) {
-  articleModel.find(function(err, articles) {
+  articleModel.find().then(articles => {
     res.send(articles);
+  }).catch(_ => {
+    res.sendStatus(500);
   });
 });
 
-app.get('/getArticlesInfo', function(req, res) {
-  articleModel.find({}, {title: 1, createTime: 1 }, function(err, articlesTitle) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      res.send(articlesTitle);
-    }
+app.get('/back/getArticlesInfo', function(req, res) {
+  articleModel.find({}, {title: 1, createTime: 1 }).then(articlesInfo => {
+    res.send(articlesInfo);
+  }).catch(_ => {
+    res.sendStatus(500);
   });
 });
 
 app.get('/getArticlesTitle', function(req, res) {
-  articleModel.find({}, {title: 1, tags: 1, createTime: 1}, function(err, articlesTitle) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      res.send(articlesTitle);
-    }
+  articleModel.find({}, {title: 1, tags: 1, createTime: 1}).then(articlesTitle => {
+    res.send(articlesTitle);
+  }).catch(_ => {
+    res.sendStatus(500);
   });
 });
 
-app.post('/saveArticle', function(req, res) {
+app.post('/back/saveArticle', function(req, res) {
   let { title, content, createTime, tags } = req.body;
 
   articleModel.create({
@@ -100,37 +128,22 @@ app.post('/saveArticle', function(req, res) {
     content,
     createTime,
     tags
-  }, function(err, article) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      // res.sendStatus(200);
-      let tagArr = [];
-      tags.forEach(tag => {
-        tagArr.push({name: tag});
-      });
-      tagModel.create(tagArr, function(err) {
-        if(err) {
-          res.sendStatus(500);
-        } else {
-          res.sendStatus(200);
-        }
-      })
-    };
-  })
-});
-
-app.get('/deleteArticle', function(req, res) {
-  articleModel.findByIdAndRemove(req.query.id, function(err) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      res.sendStatus(200);
-    }
+  }).then(article => {
+    res.send(article);
+  }).catch(_ => {
+    res.sendStatus(500);
   });
 });
 
-app.post('/changeArticle', function(req, res) {
+app.get('/back/deleteArticle', function(req, res) {
+  articleModel.findByIdAndRemove(req.query.id).then(delArticle => {
+    res.send(delArticle);
+  }).catch(_ => {
+    res.sendStatus(500);
+  });
+});
+
+app.post('/back/changeArticle', function(req, res) {
   let { id, title, content, createTime, tags } = req.body;
 
   articleModel.findByIdAndUpdate(id, {
@@ -140,28 +153,102 @@ app.post('/changeArticle', function(req, res) {
     tags
   }, {
     'new': true
-  }, function(err, newArticle) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      let tagArr = [];
-      tags.forEach(tag => {
-        tagArr.push({name: tag});
-      });
-      tagModel.create(tagArr, function(err) {
-        if(err) {
-          res.sendStatus(500);
-        } else {
-          res.send(newArticle);
-        }
-      })
-    }
+  }).then(newArticle => {
+    res.send(newArticle);
+  }).catch(_ => {
+    res.sendStatus(500);
   });
 });
+
+app.get('/getAllTags', function(req, res) {
+  articleModel.find().distinct('tags').exec().then(tags => {
+    res.send(tags);
+  }).catch(_ => {
+    res.sendStatus(500);
+  });
+});
+
+app.get('/getArticlesByTag', function(req, res) {
+  articleModel.find({tags: req.query.tag}).exec().then(articles => {
+    res.send(articles);
+  }).catch(_ => {
+    res.sendStatus(500);
+  });
+});
+
+
 app.get('/test1', function(req, res) {
-  tagModel.find().distinct('name').exec(function(err, result) {
+  // tagModel.remove({}, function(err) {
+  //   res.sendStatus(200)
+  // })
+  articleModel.find().distinct('tags').exec(function(err, result) {
     res.send(result);
   });
+});
+
+app.get('/saveUser', function(req, res) {
+  let { username, password } = req.query;
+
+  bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(password, salt, function(err, passwordHash) {
+      userModel.create({ username, passwordHash }, function(err) {
+        res.sendStatus(200);
+      })
+        // bcrypt.compare(password, hash, function(err, x) {
+        //   res.send(x);
+        // })
+    });
+  });
+
+});
+
+app.post('/login', function(req, res) {
+  let { username, password } = req.body;
+
+  userModel.findOne({username: username}).then(user => {
+    bcrypt.compare(password, user.passwordHash, function(err, result) {
+      if(err || !result) {
+        res.send('password incorrect');
+      } else {
+        let token = jwt.sign({ id: user._id }, cert);
+        res.cookie('token', token, { maxAge: 60 * 60 * 24 * 7 * 1000 });
+        res.sendStatus(200);
+      }
+    });
+  }).catch(err => {
+    res.send('no such user');
+  });
+});
+
+app.get('/verify', function(req, res) {
+  let token = req.cookies.token;
+
+  if(token) {
+    let decodedToken = jwt.verify(token, cert);
+    userModel.findById(decodedToken.id).then(_ => {
+      res.sendStatus(200);
+    }).catch(_ => {
+      res.send('no login');
+    });
+  } else {
+    res.send('no login');
+  }
+});
+
+app.get('/compare', function(req, res) {
+  let { username, password } = req.query;
+
+  userModel.findOne({username: username}, function(err, user) {
+    bcrypt.compare(password, user.passwordHash, function(err, result) {
+      let token = jwt.sign({ id: user._id }, cert);
+      req.session.isLogin = true;
+      res.cookie('token', token, { maxAge: 60 * 60 * 24 * 7 * 1000 });
+      res.send({user, result, token});
+    })
+  })
+
+
+
 });
 
 app.listen(3000, function () {
