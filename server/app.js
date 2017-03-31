@@ -97,7 +97,7 @@ app.get('/back/getArticle', function(req, res) {
 });
 
 app.get('/getArticles', function(req, res) {
-  articleModel.find().then(articles => {
+  articleModel.find().sort({createTime: -1}).then(articles => {
     res.send(articles);
   }).catch(_ => {
     res.sendStatus(500);
@@ -105,7 +105,7 @@ app.get('/getArticles', function(req, res) {
 });
 
 app.get('/back/getArticlesInfo', function(req, res) {
-  articleModel.find({}, {title: 1, createTime: 1 }).then(articlesInfo => {
+  articleModel.find({}, {title: 1, createTime: 1 }).sort({createTime: -1}).then(articlesInfo => {
     res.send(articlesInfo);
   }).catch(_ => {
     res.sendStatus(500);
@@ -113,7 +113,7 @@ app.get('/back/getArticlesInfo', function(req, res) {
 });
 
 app.get('/getArticlesTitle', function(req, res) {
-  articleModel.find({}, {title: 1, tags: 1, createTime: 1}).then(articlesTitle => {
+  articleModel.find({}, {title: 1, tags: 1, createTime: 1}).sort({createTime: -1}).then(articlesTitle => {
     res.send(articlesTitle);
   }).catch(_ => {
     res.sendStatus(500);
@@ -169,7 +169,7 @@ app.get('/getAllTags', function(req, res) {
 });
 
 app.get('/getArticlesByTag', function(req, res) {
-  articleModel.find({tags: req.query.tag}).exec().then(articles => {
+  articleModel.find({tags: req.query.tag}).sort({createTime: -1}).exec().then(articles => {
     res.send(articles);
   }).catch(_ => {
     res.sendStatus(500);
@@ -178,9 +178,6 @@ app.get('/getArticlesByTag', function(req, res) {
 
 
 app.get('/test1', function(req, res) {
-  // tagModel.remove({}, function(err) {
-  //   res.sendStatus(200)
-  // })
   articleModel.find().distinct('tags').exec(function(err, result) {
     res.send(result);
   });
@@ -194,9 +191,6 @@ app.get('/saveUser', function(req, res) {
       userModel.create({ username, passwordHash }, function(err) {
         res.sendStatus(200);
       })
-        // bcrypt.compare(password, hash, function(err, x) {
-        //   res.send(x);
-        // })
     });
   });
 
@@ -246,9 +240,6 @@ app.get('/compare', function(req, res) {
       res.send({user, result, token});
     })
   })
-
-
-
 });
 
 app.listen(3000, function () {
