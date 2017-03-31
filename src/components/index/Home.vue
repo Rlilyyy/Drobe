@@ -56,7 +56,7 @@ export default {
   methods: {
     getAllArticles () {
       axios.get(`${Store.BASE_URL}/getArticles`).then(response => {
-        this.items = response.data
+        this.items = response.data.splice(0, 5)
       })
     },
 
