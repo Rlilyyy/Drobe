@@ -6,6 +6,7 @@ import App from './App'
 import Home from 'components/index/Home'
 import FullArticle from 'components/index/FullArticle'
 import AllArticle from 'components/index/AllArticle'
+import Archiving from 'components/index/Archiving'
 import About from 'components/index/About'
 import TagView from 'components/index/TagView'
 import ChangeArticle from 'components/back/ChangeArticle'
@@ -24,6 +25,7 @@ const routes = [
   { path: '/allArticle', component: AllArticle, name: 'allArticle' },
   { path: '/about', component: About, name: 'about' },
   { path: '/tagView', component: TagView, name: 'tagView' },
+  { path: '/archiving', component: Archiving, name: 'archiving' },
 
   { path: '/back/login', component: Login, name: 'login' },
   { path: '/back', redirect: '/back/viewArticles' },

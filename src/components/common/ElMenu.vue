@@ -21,11 +21,11 @@
           <div>福利 | FULI</div>
         </li>
       </a> -->
-      <a href="https://oxygen.libinhong.com" target="_blank">
-        <li>
-          <div>听听音乐 | MUSIC</div>
+      <router-link :to="{ name: 'archiving'}">
+        <li :class="{ cur: $route.name === 'archiving' }">
+          <div>归档 | ARCHIVING</div>
         </li>
-      </a>
+      </router-link>
       <router-link :to="{ name: 'about'}">
         <li :class="{ cur: $route.name === 'about' }">
           <div>关于我 | ABOUT</div>
