@@ -50,14 +50,14 @@ export default {
           let year = tempDate.getFullYear()
           let month = tempDate.getMonth() + 1
 
-          if (flag[year + month + ''] === undefined) {
-            flag[year + month + ''] = items.length
-            items[flag[year + month + '']] = []
+          if (flag[year + '' + month] === undefined) {
+            flag[year + '' + month] = items.length
+            items[flag[year + '' + month]] = []
           }
 
           response.data[idx].year = year
           response.data[idx].month = month
-          items[flag[year + month + '']].push(response.data[idx])
+          items[flag[year + '' + month]].push(response.data[idx])
         }
         this.items = items
       })
