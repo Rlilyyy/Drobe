@@ -12,6 +12,7 @@ import TagView from 'components/index/TagView'
 import ChangeArticle from 'components/back/ChangeArticle'
 import CreateArticle from 'components/back/CreateArticle'
 import ViewArticles from 'components/back/ViewArticles'
+import Comments from 'components/back/Comments'
 import Login from 'components/back/Login'
 import axios from 'axios'
 
@@ -31,6 +32,7 @@ const routes = [
   { path: '/back', redirect: '/back/viewArticles' },
   { path: '/back/viewArticles', component: ViewArticles, name: 'viewArticles' },
   { path: '/back/createArticle', component: CreateArticle, name: 'createArticle' },
+  { path: '/back/comments', component: Comments, name: 'comments' },
   { path: '/back/changeArticle/:id', component: ChangeArticle, name: 'changeArticle' }
 ]
 

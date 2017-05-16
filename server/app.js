@@ -49,7 +49,8 @@ const articleSchema = new mongoose.Schema({
     title: String,
     content: String,
     createTime: Number,
-    tags: [String]
+    tags: [String],
+    comments: []
 });
 
 const userSchema = new mongoose.Schema({
@@ -180,11 +181,80 @@ app.get('/getArticlesByTag', function(req, res) {
   });
 });
 
+app.post('/comment', function(req, res) {
+  let {content, nickname, email, id} = req.body;
+  let createTime = new Date().getTime();
+  let pms = false;
+  articleModel.findByIdAndUpdate(id, {'$push':{
+    'comments': {
+      content: content,
+      nickname: nickname,
+      email: email,
+      createTime: createTime,
+      pms: pms,
+      belondId: id
+    }
+  }}).then(_ => {
+    res.sendStatus(200);
+  }).catch(e => {
+    res.sendStatus(500);
+  });
+});
+
+app.get('/getUnpassComments', function(req, res) {
+  articleModel.find().distinct('comments').exec().then(comments => {
+    res.send(comments);
+  }).catch(_ => {
+    res.sendStatus(500);
+  });
+});
+
+app.post('/commentPass', function(req, res) {
+  let { comment } = req.body;
+
+  articleModel.update({
+    'comments': comment
+  }, {
+    '$set': {
+      'comments.$.pms': true
+    }
+  }).then(_ => {
+    res.sendStatus(200);
+  }).catch(e => {
+    res.sendStatus(500);
+  });
+});
+
+app.post('/deleteComment', function(req, res) {
+  let { belondId, nickname, email, createTime, pms, content } = req.body.comment;
+
+  articleModel.update({
+    '_id': belondId
+  }, {
+    '$pull': {
+      'comments': req.body.comment
+    }
+  }).then(_ => {
+    res.sendStatus(200);
+  }).catch(e => {
+    res.sendStatus(500);
+  });
+});
+
 
 app.get('/test1', function(req, res) {
-  articleModel.find().distinct('tags').exec(function(err, result) {
-    res.send(result);
-  });
+  // let obj = {
+  //   content: '123',
+  //   createTime: new Date().getTime(),
+  //   nickname: 'qwe',
+  //   email: '532273622@qq.com',
+  //   pms: false
+  // };
+  // articleModel.update({_id: '58d7f9a82ac9216c3204c5a6'}, {'$push':{'comments': obj}}).then(_ => {
+  //   res.send(_);
+  // });
+  articleModel.update({}, {comments: []})
+  // articleModel.update({_id: '5919b67c0987422c7971939f'}, {'$pop':{comments: 1}}).then(_=>res.send(_))
 });
 
 app.get('/saveUser', function(req, res) {

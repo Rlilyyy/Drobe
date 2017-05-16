@@ -44,6 +44,11 @@
           <div>浏览文章 | VIEW</div>
         </li>
       </router-link>
+      <router-link :to="{ name: 'comments'}">
+        <li :class="{ cur: $route.name === 'comments' }">
+          <div>评论管理 | COMMENT</div>
+        </li>
+      </router-link>
     </ul>
 
     <div class="icons">
